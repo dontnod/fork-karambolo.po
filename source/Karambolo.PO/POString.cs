@@ -34,6 +34,7 @@ namespace Karambolo.PO
                     case '\\': b.Append('\\'); return true;
                     case '"': b.Append('"'); return true;
                     case 't': b.Append('\t'); return true;
+                    case 'r': b.Append('\r'); return true;
                     case 'n': b.Append(newLine); return true;
                     default: return false;
                 }
@@ -51,7 +52,7 @@ namespace Karambolo.PO
                     case '\\': builder.Append('\\'); break;
                     case '"': builder.Append('\\'); break;
                     case '\t': builder.Append('\\'); c = 't'; break;
-                    case '\r':
+                    case '\r': builder.Append('\\'); c = 'r'; break;
                     case '\n':
                         var index = startIndex;
                         if (c == '\r' && ++index < endIndex && source[index] == '\n')
