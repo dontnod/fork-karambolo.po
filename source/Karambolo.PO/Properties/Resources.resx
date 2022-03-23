@@ -129,6 +129,9 @@
   <data name="EncodingNotSingleByte" xml:space="preserve">
     <value>PO specification allows only single-byte encodings so writer should use a single-byte encoding, too. However, you may disable this check by setting POGeneratorSettings.IgnoreEncoding to true.</value>
   </data>
+  <data name="EntryHasEmptyId" xml:space="preserve">
+    <value>Entry beginning at {0} has an empty id.</value>
+  </data>
   <data name="ExpectedToken" xml:space="preserve">
     <value>Token '{1}' is expected at {0}.</value>
   </data>
@@ -141,11 +144,14 @@
   <data name="IncorrectFormat" xml:space="preserve">
     <value>Input string was not in a correct format.</value>
   </data>
+  <data name="InvalidCatalogEntryKey" xml:space="preserve">
+    <value>Entry has an invalid key. {0} must be non-null and can be empty only if {1} or {2} is non-null, i.e. key is not the reserved header entry key.</value>
+  </data>
   <data name="InvalidControlChar" xml:space="preserve">
     <value>Invalid control character encountered at {0}.</value>
   </data>
   <data name="InvalidEntryKey" xml:space="preserve">
-    <value>Entry beginning at {0} must not have an empty id.</value>
+    <value>Entry beginning at {0} has an invalid key.</value>
   </data>
   <data name="InvalidEscapeSequence" xml:space="preserve">
     <value>Escape sequence is invalid at {0}.</value>
@@ -153,14 +159,17 @@
   <data name="InvalidHeaderComment" xml:space="preserve">
     <value>Header entry should have only translator comments.</value>
   </data>
-  <data name="InvalidHeaderEntryKey" xml:space="preserve">
-    <value>Header entry should not contain context or plural id.</value>
-  </data>
   <data name="InvalidHeaderValue" xml:space="preserve">
     <value>Header value '{0}' is invalid.</value>
   </data>
+  <data name="InvalidPluralEntryKey" xml:space="preserve">
+    <value>Key is invalid. {0} must be non-null and {1} must be non-null.</value>
+  </data>
   <data name="InvalidPluralIndex" xml:space="preserve">
     <value>Plural index is invalid at {0}.</value>
+  </data>
+  <data name="InvalidSingularEntryKey" xml:space="preserve">
+    <value>Key is invalid. {0} must be non-null and {1} must be null.</value>
   </data>
   <data name="MalformedComment" xml:space="preserve">
     <value>Comment at {0} is in the wrong format.</value>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Karambolo.PO
 {
@@ -61,10 +62,20 @@ namespace Karambolo.PO
 
         public bool IsValid => Id != null;
 
+        internal bool IsHeaderEntryKey => IsValid && Id.Length == 0 && PluralId == null && ContextId == null;
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void Deconstruct(out string id, out string pluralId, out string contextId)
+        {
+            id = Id;
+            pluralId = PluralId;
+            contextId = ContextId;
+        }
+
         public bool Equals(POKey other)
         {
             return
-                Id == other.Id &&
+                Id.Replace("\r\n", "\n").Normalize() == other.Id.Replace("\r\n", "\n").Normalize() &&
                 PluralId == other.PluralId &&
                 ContextId == other.ContextId;
         }
@@ -78,7 +89,7 @@ namespace Karambolo.PO
         {
             EqualityComparer<string> stringComparer = EqualityComparer<string>.Default;
             int hashCode = -1618513021;
-            hashCode = hashCode * -1521134295 + stringComparer.GetHashCode(Id);
+            hashCode = hashCode * -1521134295 + stringComparer.GetHashCode(Id.Replace("\r\n", "\n").Normalize());
             hashCode = hashCode * -1521134295 + stringComparer.GetHashCode(PluralId);
             hashCode = hashCode * -1521134295 + stringComparer.GetHashCode(ContextId);
             return hashCode;

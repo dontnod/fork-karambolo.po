@@ -59,6 +59,7 @@ namespace Karambolo.PO
         {
             public const string DuplicateHeaderKey = nameof(Resources.DuplicateHeaderKey);
             public const string DuplicatePluralForm = nameof(Resources.DuplicatePluralForm);
+            public const string EntryHasEmptyId = nameof(Resources.EntryHasEmptyId);
             public const string ExpectedToken = nameof(Resources.ExpectedToken);
             public const string HeaderNotSingular = nameof(Resources.HeaderNotSingular);
             public const string IncompleteEntry = nameof(Resources.IncompleteEntry);
@@ -66,7 +67,6 @@ namespace Karambolo.PO
             public const string InvalidEntryKey = nameof(Resources.InvalidEntryKey);
             public const string InvalidEscapeSequence = nameof(Resources.InvalidEscapeSequence);
             public const string InvalidHeaderComment = nameof(Resources.InvalidHeaderComment);
-            public const string InvalidHeaderEntryKey = nameof(Resources.InvalidHeaderEntryKey);
             public const string InvalidHeaderValue = nameof(Resources.InvalidHeaderValue);
             public const string InvalidPluralIndex = nameof(Resources.InvalidPluralIndex);
             public const string MalformedComment = nameof(Resources.MalformedComment);
@@ -199,7 +199,10 @@ namespace Karambolo.PO
 
         private string GetUnexpectedCharDiagnosticCode(string defaultDiagnosticCode)
         {
-            return 0 <= _columnIndex && _columnIndex < _line.Length && char.IsControl(_line[_columnIndex]) ? DiagnosticCodes.InvalidControlChar : defaultDiagnosticCode;
+            return
+                _line != null && 0 <= _columnIndex && _columnIndex < _line.Length && char.IsControl(_line[_columnIndex]) ?
+                DiagnosticCodes.InvalidControlChar :
+                defaultDiagnosticCode;
         }
 
         private int FindNextTokenInLine(bool requireWhiteSpace = false)
@@ -450,7 +453,7 @@ namespace Karambolo.PO
             return result;
         }
 
-        private bool TryReadEntry(bool allowEmptyId, out IPOEntry result)
+        private bool TryReadEntry(bool allowHeaderEntry, out IPOEntry result)
         {
             if (_line == null)
             {
@@ -523,11 +526,18 @@ namespace Karambolo.PO
                             return false;
                         }
 
-                        if (!allowEmptyId && entry == null && id == string.Empty)
+                        if (entry == null && id.Length == 0)
                         {
-                            AddError(Resources.InvalidEntryKey, entryLocation);
-                            result = null;
-                            return false;
+                            if (!(pluralId == null && contextId == null))
+                            {
+                                AddWarning(DiagnosticCodes.EntryHasEmptyId, entryLocation);
+                            }
+                            else if (!allowHeaderEntry)
+                            {
+                                AddError(DiagnosticCodes.InvalidEntryKey, entryLocation);
+                                result = null;
+                                return false;
+                            }
                         }
 
                         // plural
@@ -624,7 +634,7 @@ namespace Karambolo.PO
 
         private bool CheckHeader(IPOEntry entry)
         {
-            if (entry == null || entry.Key.Id != string.Empty)
+            if (entry == null || !entry.Key.IsHeaderEntryKey)
                 return false;
 
             if (!(entry is POSingularEntry))
@@ -632,9 +642,6 @@ namespace Karambolo.PO
                 AddError(DiagnosticCodes.HeaderNotSingular);
                 return false;
             }
-
-            if (entry.Key.PluralId != null || entry.Key.ContextId != null)
-                AddWarning(DiagnosticCodes.InvalidHeaderEntryKey);
 
             if (entry.Comments != null && entry.Comments.Any(c => c.Kind == POCommentKind.PreviousValue || c.Kind == POCommentKind.Reference))
                 AddWarning(DiagnosticCodes.InvalidHeaderComment);
@@ -748,7 +755,7 @@ namespace Karambolo.PO
 
             try
             {
-                if (!TryReadEntry(allowEmptyId: true, result: out IPOEntry entry))
+                if (!TryReadEntry(allowHeaderEntry: true, result: out IPOEntry entry))
                     return new POParseResult(_catalog, _diagnostics);
 
                 var isHeader = CheckHeader(entry);
@@ -760,7 +767,7 @@ namespace Karambolo.PO
                     if (!isHeader)
                         _catalog.Add(entry);
 
-                    while (TryReadEntry(allowEmptyId: false, result: out entry))
+                    while (TryReadEntry(allowHeaderEntry: false, result: out entry))
                         _catalog.Add(entry);
                 }
 
