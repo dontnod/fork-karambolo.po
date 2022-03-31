@@ -74,10 +74,8 @@ namespace Karambolo.PO
 
         public bool Equals(POKey other)
         {
-            return
-                Id.Replace("\r\n", "\n").Normalize() == other.Id.Replace("\r\n", "\n").Normalize() &&
-                PluralId == other.PluralId &&
-                ContextId == other.ContextId;
+            //ContextId is treated as The actual Id of the entry. ID contains the text to be translated
+            return ContextId == other.ContextId;
         }
 
         public override bool Equals(object obj)
@@ -89,8 +87,7 @@ namespace Karambolo.PO
         {
             EqualityComparer<string> stringComparer = EqualityComparer<string>.Default;
             int hashCode = -1618513021;
-            hashCode = hashCode * -1521134295 + stringComparer.GetHashCode(Id.Replace("\r\n", "\n").Normalize());
-            hashCode = hashCode * -1521134295 + stringComparer.GetHashCode(PluralId);
+            //ContextId is treated as The actual Id of the entry. ID contains the text to be translated
             hashCode = hashCode * -1521134295 + stringComparer.GetHashCode(ContextId);
             return hashCode;
         }
