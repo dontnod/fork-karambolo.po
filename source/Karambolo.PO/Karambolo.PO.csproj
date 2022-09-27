@@ -44,6 +44,10 @@
     <BaseIntermediateOutputPath>obj\$(Edition)\</BaseIntermediateOutputPath>
     <BaseOutputPath>bin\$(Edition)\</BaseOutputPath>
   </PropertyGroup>
+   
+  <PropertyGroup>
+    <Edition Condition="'$(Edition)' == '' ">Full</Edition>
+  </PropertyGroup>
 
   <!-- https://stackoverflow.com/questions/45750068/setting-of-baseintermediateoutputpath-prevents-running-targets-from-nuget -->
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
