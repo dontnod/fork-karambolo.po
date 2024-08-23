@@ -19,7 +19,7 @@ namespace Karambolo.PO
         PreviousValue = 0x10,
     }
 
-    public abstract class POComment
+    public abstract class POComment : IEquatable<POComment>
     {
         public POComment(POCommentKind kind)
         {
@@ -33,6 +33,12 @@ namespace Karambolo.PO
         }
 
         public POCommentKind Kind { get; }
+
+        public bool Equals(POComment other)
+        {
+            return Kind == other.Kind
+                && ToString() == other.ToString();
+        }
     }
 
     public class POTranslatorComment : POComment

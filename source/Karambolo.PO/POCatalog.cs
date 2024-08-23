@@ -62,6 +62,10 @@ namespace Karambolo.PO
 
         public IEnumerable<IPOEntry> Values => this;
 
+        public IList<IPOEntry> ParsingErrors = new List<IPOEntry>();
+
+        public bool HasParsingDoubles = false;
+
         public IDictionary<string, string> Headers { get; set; }
         public IList<POComment> HeaderComments { get; set; }
 
@@ -162,7 +166,19 @@ namespace Karambolo.PO
         protected override void InsertItem(int index, IPOEntry item)
         {
             CheckEntry(item);
-            base.InsertItem(index, item);
+            if (Keys.Contains(item.Key))
+            {
+                TryGetValue(item.Key, out IPOEntry entry);
+                if (item.Equals(entry))
+                {
+                   HasParsingDoubles = true;
+                }
+                //same key but different comments/translations
+                else
+                    ParsingErrors.Add(item);
+            }
+            else
+                base.InsertItem(index, item);
         }
 
         protected override void SetItem(int index, IPOEntry item)
