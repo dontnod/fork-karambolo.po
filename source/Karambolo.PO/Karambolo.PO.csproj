@@ -12,12 +12,12 @@
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <Edition>Full</Edition>
-    <DefineConstants>TRACE;DEBUG;USE_COMMON;USE_HIME</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;USE_COMMON;ENABLE_PLURALFORMS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_Compact|AnyCPU' ">
     <Edition>Compact</Edition>
-    <DefineConstants>TRACE;DEBUG;USE_HIME</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ENABLE_PLURALFORMS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_Minimal|AnyCPU' ">
@@ -27,12 +27,12 @@
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Edition>Full</Edition>
-    <DefineConstants>TRACE;USE_COMMON;USE_HIME</DefineConstants>
+    <DefineConstants>TRACE;USE_COMMON;ENABLE_PLURALFORMS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_Compact|AnyCPU' ">
     <Edition>Compact</Edition>
-    <DefineConstants>TRACE;USE_HIME</DefineConstants>
+    <DefineConstants>TRACE;ENABLE_PLURALFORMS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_Minimal|AnyCPU' ">
@@ -52,6 +52,10 @@
   <!-- https://stackoverflow.com/questions/45750068/setting-of-baseintermediateoutputpath-prevents-running-targets-from-nuget -->
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <Import Project="Properties\AssemblyInfo.$(Edition).props" />
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Test, PublicKey=00240000048000009400000006020000002400005253413100040000010001009386e741f80212b92e6324bd2d5d89871d081fa41cce46ba30a3d3cae4be4935a92cf6c76a55e5192adad2235139d550816388bdad8a972a7a4eace42838c7694a0124c56174ff27690ba4d470c423ee72efac06decef995b89b6e936b59fe4c6ba88d3c2d3a34216221e1bf455faf1c3e88d93f37b0891b2fbbad9bf606d9ce" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -79,32 +83,19 @@
   <Choose>
     <When Condition="'$(Edition)' == 'Full'">
       <ItemGroup>
-        <PackageReference Include="Hime.Redist" Version="3.5.1" />
         <PackageReference Include="Karambolo.Common" Version="3.4.1" />
 
         <Compile Remove="Common\**" />
         <EmbeddedResource Remove="Common\**" />
         <None Remove="Common\**" />
-
-        <EmbeddedResource Include="PluralExpression\PluralExpressionLexer.bin" />
-        <EmbeddedResource Include="PluralExpression\PluralExpressionParser.bin" />
       </ItemGroup>
     </When>
 
-    <When Condition="'$(Edition)' == 'Compact'">
-      <ItemGroup>
-        <PackageReference Include="Hime.Redist" Version="3.5.1" />
-
-        <EmbeddedResource Include="PluralExpression\PluralExpressionLexer.bin" />
-        <EmbeddedResource Include="PluralExpression\PluralExpressionParser.bin" />
-      </ItemGroup>
-    </When>
-    
     <When Condition="'$(Edition)' == 'Minimal'">
       <ItemGroup>
-        <Compile Remove="PluralExpression\**" />
-        <EmbeddedResource Remove="PluralExpression\**" />
-        <None Remove="PluralExpression\**" />
+        <Compile Remove="PluralExpressions\**" />
+        <EmbeddedResource Remove="PluralExpressions\**" />
+        <None Remove="PluralExpressions\**" />
       </ItemGroup>
     </When>
   </Choose>

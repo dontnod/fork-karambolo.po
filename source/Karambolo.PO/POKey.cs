@@ -83,6 +83,13 @@ namespace Karambolo.PO
             return obj is POKey key && Equals(key);
         }
 
+        public bool FullEquals(POKey other)
+        {
+            return ContextId == other.ContextId
+                && PluralId == other.PluralId
+                && ContextId == other.ContextId;
+        }
+
         public override int GetHashCode()
         {
             EqualityComparer<string> stringComparer = EqualityComparer<string>.Default;

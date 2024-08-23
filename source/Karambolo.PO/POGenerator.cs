@@ -182,38 +182,25 @@ namespace Karambolo.PO
 
             foreach (IGrouping<POCommentKind, POComment> commentGroup in commentLookup)
             {
-                char commentKindToken;
+                string commentKindToken;
+                IEnumerable<POComment> orderedComments = commentGroup;
                 switch (commentGroup.Key)
                 {
-                    case POCommentKind.Translator: commentKindToken = ' '; break;
-                    case POCommentKind.Extracted: commentKindToken = '.'; break;
-                    case POCommentKind.Reference: commentKindToken = ':'; break;
-                    case POCommentKind.Flags: commentKindToken = ','; break;
-                    case POCommentKind.PreviousValue: commentKindToken = '|'; break;
+                    case POCommentKind.Translator: commentKindToken = " "; break;
+                    case POCommentKind.Extracted: commentKindToken = "."; break;
+                    case POCommentKind.Reference: commentKindToken = ":"; break;
+                    case POCommentKind.Flags: commentKindToken = ","; break;
+                    case POCommentKind.PreviousValue:
+
+                        commentKindToken = "|";
+                        orderedComments = orderedComments.OrderBy(c => c, POPreviousValueCommentDefaultOrderComparer.Instance);
+                        break;
                     default: throw new InvalidOperationException();
                 }
 
-                var commentContents = commentGroup.Select(c => c.ToString());
-
-                // PreviousValue comments follow a very specific format. Only msgctxt, msgid, and msgid_plural are
-                // valid key names, must appear in that specific order, and only one entry is allowed for each
-                // key name. We remove any invalid comments and reorder them if necessary.
-                if (commentGroup.Key == POCommentKind.PreviousValue)
+                foreach (POComment comment in orderedComments)
                 {
-                    var previousValueOrder = new Dictionary<string, int>()
-                    {
-                        ["msgctxt"] = 0,
-                        ["msgid"] = 1,
-                        ["msgid_plural"] = 2,
-                    };
-                    commentContents = commentContents.ToLookup(c => c.ToString().Split().FirstOrDefault())
-                                                     .Where(g => previousValueOrder.ContainsKey(g.Key))
-                                                     .OrderBy(g => previousValueOrder[g.Key])
-                                                     .Select(g => g.First());
-                }
-
-                foreach (string commentContent in commentContents)
-                {
+                    var commentContent = comment.ToString();
                     var separator = !string.IsNullOrEmpty(commentContent) ? " " : string.Empty;
                     _writer.WriteLine($"#{commentKindToken}{separator}{commentContent}");
                 }

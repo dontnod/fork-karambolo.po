@@ -8,18 +8,18 @@ using System.IO;
 using Hime.Redist;
 using Hime.Redist.Lexer;
 
-namespace Karambolo.PO.PluralExpression
+namespace Karambolo.PO.Test.Helpers
 {
 	/// <summary>
 	/// Represents a lexer
 	/// </summary>
 	[GeneratedCodeAttribute("Hime.SDK", "3.5.1.0")]
-	internal class PluralExpressionLexer : ContextFreeLexer
+	internal class TestPluralExpressionLexer : ContextFreeLexer
 	{
 		/// <summary>
 		/// The automaton for this lexer
 		/// </summary>
-		private static readonly Automaton commonAutomaton = Automaton.Find(typeof(PluralExpressionLexer), "PluralExpressionLexer.bin");
+		private static readonly Automaton commonAutomaton = Automaton.Find(typeof(TestPluralExpressionLexer), "TestPluralExpressionLexer.bin");
 		/// <summary>
 		/// Contains the constant IDs for the terminals for this lexer
 		/// </summary>
@@ -68,32 +68,33 @@ namespace Karambolo.PO.PluralExpression
 			new Symbol(0x0004, "SEPARATOR"),
 			new Symbol(0x0005, "INTEGER"),
 			new Symbol(0x0006, "VARIABLE"),
-			new Symbol(0x000F, "?"),
-			new Symbol(0x0010, ":"),
-			new Symbol(0x0011, "||"),
-			new Symbol(0x0012, "&&"),
-			new Symbol(0x0013, "=="),
-			new Symbol(0x0014, "!="),
-			new Symbol(0x0015, "<"),
-			new Symbol(0x0016, ">"),
-			new Symbol(0x0017, "<="),
-			new Symbol(0x0018, ">="),
-			new Symbol(0x0019, "+"),
-			new Symbol(0x001A, "-"),
-			new Symbol(0x001B, "*"),
-			new Symbol(0x001C, "/"),
-			new Symbol(0x001D, "%"),
-			new Symbol(0x001E, "("),
-			new Symbol(0x001F, ")") };
+			new Symbol(0x0010, "?"),
+			new Symbol(0x0011, ":"),
+			new Symbol(0x0012, "||"),
+			new Symbol(0x0013, "&&"),
+			new Symbol(0x0014, "=="),
+			new Symbol(0x0015, "!="),
+			new Symbol(0x0016, "<"),
+			new Symbol(0x0017, ">"),
+			new Symbol(0x0018, "<="),
+			new Symbol(0x0019, ">="),
+			new Symbol(0x001A, "+"),
+			new Symbol(0x001B, "-"),
+			new Symbol(0x001C, "*"),
+			new Symbol(0x001D, "/"),
+			new Symbol(0x001E, "%"),
+			new Symbol(0x001F, "!"),
+			new Symbol(0x0020, "("),
+			new Symbol(0x0021, ")") };
 		/// <summary>
 		/// Initializes a new instance of the lexer
 		/// </summary>
 		/// <param name="input">The lexer's input</param>
-		public PluralExpressionLexer(string input) : base(commonAutomaton, terminals, 0x0004, input) {}
+		public TestPluralExpressionLexer(string input) : base(commonAutomaton, terminals, 0x0004, input) {}
 		/// <summary>
 		/// Initializes a new instance of the lexer
 		/// </summary>
 		/// <param name="input">The lexer's input</param>
-		public PluralExpressionLexer(TextReader input) : base(commonAutomaton, terminals, 0x0004, input) {}
+		public TestPluralExpressionLexer(TextReader input) : base(commonAutomaton, terminals, 0x0004, input) {}
 	}
 }

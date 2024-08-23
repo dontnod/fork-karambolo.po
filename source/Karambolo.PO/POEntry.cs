@@ -12,7 +12,7 @@ namespace Karambolo.PO
     using Karambolo.Common.Collections;
 #endif
 
-    public interface IPOEntry : IReadOnlyList<string>
+    public interface IPOEntry : IReadOnlyList<string>, IEquatable<IPOEntry>
     {
         POKey Key { get; }
 
@@ -51,7 +51,7 @@ namespace Karambolo.PO
         private static string CheckIndex(int index, string value)
         {
             if (index != 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
 
             return value;
         }
@@ -77,6 +77,15 @@ namespace Karambolo.PO
         {
             return GetEnumerator();
         }
+
+        public bool Equals(IPOEntry other)
+        {
+            if (other is POSingularEntry sEntry)
+                return Key.FullEquals(sEntry.Key)
+                    && Translation == sEntry.Translation
+                    && Comments.SequenceEqual(sEntry.Comments);
+            return false;
+        }
     }
 
     public class POPluralEntry : Collection<string>, IPOEntry
@@ -99,5 +108,14 @@ namespace Karambolo.PO
         public POKey Key { get; }
 
         public IList<POComment> Comments { get; set; }
+
+        public bool Equals(IPOEntry other)
+        {
+            if (other is POPluralEntry pEntry)
+                return Key.FullEquals(pEntry.Key)
+                    && this.ToList().SequenceEqual(pEntry.ToList())
+                    && Comments.SequenceEqual(pEntry.Comments);
+            return false;
+        }
     }
 }
