@@ -39,7 +39,7 @@ namespace Karambolo.PO
 
         private Func<int, int> _compiledPluralFormSelector;
 
-        public POCatalog() : base(null, Constants.RecommendedKeyedCollectionThreshold)
+        public POCatalog() : base(null, 0)
         {
             _compiledPluralFormSelector = s_defaultPluralFormSelector;
         }
@@ -166,9 +166,9 @@ namespace Karambolo.PO
         protected override void InsertItem(int index, IPOEntry item)
         {
             CheckEntry(item);
-            if (Keys.Contains(item.Key))
+
+            if (TryGetValue(item.Key, out IPOEntry entry))
             {
-                TryGetValue(item.Key, out IPOEntry entry);
                 if (item.Equals(entry))
                 {
                    HasParsingDoubles = true;
