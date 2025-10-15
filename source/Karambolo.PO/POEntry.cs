@@ -83,8 +83,8 @@ namespace Karambolo.PO
             if (other is POSingularEntry sEntry)
                 return Key.FullEquals(sEntry.Key)
                     && Translation == sEntry.Translation
-                    && Comments != null && sEntry.Comments != null
-                    && Comments.SequenceEqual(sEntry.Comments);
+                    && (Comments == null && sEntry.Comments == null ||
+                        Comments.SequenceEqual(sEntry.Comments));
             return false;
         }
     }
